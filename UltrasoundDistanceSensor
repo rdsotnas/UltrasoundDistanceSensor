@@ -1,0 +1,49 @@
+#include <LiquidCrystal.h>
+
+// Pin assignments
+int trigPin = 9;
+int echoPin = 10;
+
+// LCD pin setup
+LiquidCrystal lcd(1, 2, 4, 5, 6, 7);
+
+// Variables
+long duration;
+int distance;
+float speed_of_sound = 0.034; // Speed of sound in cm/µs
+
+void setup() {
+  // Initialize pins
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  
+  // Initialize the LCD
+  lcd.begin(16, 2); // Set up the LCD's number of columns and rows
+}
+
+void loop() {
+  // Clear the trigPin
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  // Send a pulse
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Measure the pulse duration
+  duration = pulseIn(echoPin, HIGH);
+
+  // Calculate the distance
+  distance = duration * speed_of_sound / 2; // Divide by 2 to account for the round trip
+
+  // Display the result on the LCD
+  lcd.setCursor(0, 0); // Position the cursor
+  lcd.print("Distance: "); // Print the label
+  lcd.setCursor(0, 1); // Move to the second line
+  lcd.print(distance); // Print the distance
+  lcd.print(" cm"); // Print the unit
+
+  delay(10); // Small delay before restarting the loop
+}
+
